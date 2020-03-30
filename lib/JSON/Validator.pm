@@ -827,7 +827,7 @@ sub _validate_type_number {
   unless (_is_number($value)) {
     return E $path, "Expected $expected - got string."
       if !$self->{coerce}{numbers}
-      or !looks_like_number($value);
+      or !looks_like_number($value) or $value =~ /inf|nan/i;
     $_[1] = 0 + $value;    # coerce input value
   }
 
