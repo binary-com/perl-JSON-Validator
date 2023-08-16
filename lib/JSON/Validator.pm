@@ -863,7 +863,7 @@ sub _validate_type_object {
   }
 
   if (defined $schema->{maxSize} && length(Mojo::JSON::encode_json($data)) > $schema->{maxSize}) {
-    push @errors, E $path, sprintf 'Size of of object exceeds %s bytes.', $schema->{maxSize};
+    push @errors, E $path, sprintf 'Size of the object exceeds %s bytes.', $schema->{maxSize};
   }
 
   my @dkeys = sort keys %$data;
