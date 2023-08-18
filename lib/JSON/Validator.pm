@@ -24,7 +24,7 @@ use constant REPORT            => $ENV{JSON_VALIDATOR_REPORT} // DEBUG >= 2;
 use constant RECURSION_LIMIT   => $ENV{JSON_VALIDATOR_RECURSION_LIMIT} || 100;
 use constant SPECIFICATION_URL => 'http://json-schema.org/draft-04/schema#';
 
-our $VERSION = '3.06';
+our $VERSION = '3.07';
 our @EXPORT_OK = qw(joi validate_json);
 
 my $BUNDLED_CACHE_DIR = path(path(__FILE__)->dirname, qw(Validator cache));
@@ -860,6 +860,10 @@ sub _validate_type_object {
 
   if (ref $data ne 'HASH') {
     return E $path, _expected(object => $data);
+  }
+
+  if (defined $schema->{maxSize} && length(Mojo::JSON::encode_json($data)) > $schema->{maxSize}) {
+    push @errors, E $path, sprintf 'Size of the object exceeds %s bytes.', $schema->{maxSize};
   }
 
   my @dkeys = sort keys %$data;
